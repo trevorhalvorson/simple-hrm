@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Simple HRM</string>
+    <string name="hr_label">BPM</string>
+</resources>
