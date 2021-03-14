@@ -15,11 +15,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.trevorhalvorson.simplehrm.R
+import com.trevorhalvorson.simplehrm.model.HeartRate
+import com.trevorhalvorson.simplehrm.viewmodel.HrViewModel
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -35,7 +38,7 @@ class HrmFragment : Fragment(), SensorEventListener {
         fun newInstance() = HrmFragment()
     }
 
-    private lateinit var viewModel: HrmViewModel
+    private lateinit var hrViewModel: HrViewModel
     private lateinit var hrTv: TextView
     private lateinit var hrChart: LineChart
 
@@ -43,18 +46,21 @@ class HrmFragment : Fragment(), SensorEventListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.hrm_fragment, container, false)
-        hrTv = view.findViewById(R.id.hr_data_tv)
-        hrChart = view.findViewById(R.id.hr_chart)
-        return view
+        return inflater.inflate(R.layout.hrm_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HrmViewModel::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        hrTv = view.findViewById(R.id.hr_data_tv)
+        hrChart = view.findViewById(R.id.hr_chart)
+
+        hrViewModel = ViewModelProvider(this).get(HrViewModel::class.java)
+        hrViewModel.heartRate.observe(this, Observer<HeartRate> { heartRate ->
+            val bpm = heartRate.bpm
+            hrTv.text = bpm.roundToInt().toString()
+            updateChart(bpm)
+        })
 
         setupChart()
-        initChartData()
     }
 
     override fun onResume() {
@@ -84,12 +90,7 @@ class HrmFragment : Fragment(), SensorEventListener {
         )
         when (event?.sensor?.type) {
             Sensor.TYPE_HEART_RATE -> {
-                val value = event.values.firstOrNull()
-                value?.let {
-                    val hr = value.roundToInt()
-                    hrTv.text = hr.toString()
-                    updateChart(hr.toFloat())
-                }
+                hrViewModel.submitHrEvent(event)
             }
 
             Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT -> {
@@ -111,6 +112,7 @@ class HrmFragment : Fragment(), SensorEventListener {
     }
 
     private fun setupChart() {
+        // Chart settings
         hrChart.description.isEnabled = false
         hrChart.isDragEnabled = false
         hrChart.isAutoScaleMinMaxEnabled = false
@@ -125,9 +127,8 @@ class HrmFragment : Fragment(), SensorEventListener {
         hrChart.setPinchZoom(false)
         hrChart.setDrawGridBackground(false)
         hrChart.invalidate()
-    }
 
-    private fun initChartData() {
+        // Initial Chart data
         val initialData = arrayListOf<Entry>()
         for (i in 0 until MAX_DATA_POINTS) {
             initialData.add(Entry(i * 1F, INITIAL_HR))
