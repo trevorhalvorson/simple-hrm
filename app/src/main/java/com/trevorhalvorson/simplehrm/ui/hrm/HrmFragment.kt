@@ -1,7 +1,6 @@
 package com.trevorhalvorson.simplehrm.ui.hrm
 
 import android.content.Context
-import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -15,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -35,8 +35,8 @@ class HrmFragment : Fragment(), SensorEventListener {
         val CHART_DATA_SET_LABEL = "HR_DATA"
         val CHART_MAX_DATA_POINTS = 10
         val CHART_INITIAL_HR = 60F
-        val CHART_MIN_OFFSET_RATIO = 0.9F
-        val CHART_MAX_OFFSET_RATIO = 1.1F
+        val CHART_MIN_OFFSET_RATIO = 0.8F
+        val CHART_MAX_OFFSET_RATIO = 1.2F
 
         fun newInstance() = HrmFragment()
     }
@@ -141,8 +141,8 @@ class HrmFragment : Fragment(), SensorEventListener {
         dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         dataSet.cubicIntensity = 0.3f
         dataSet.setDrawCircles(false)
-        dataSet.lineWidth = 2f
-        dataSet.color = Color.RED
+        dataSet.lineWidth = 5f
+        dataSet.color = ContextCompat.getColor(hrChart.context, R.color.red_500)
         dataSet.setDrawHorizontalHighlightIndicator(false)
 
         val data = LineData(dataSet)
