@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Simple HRM</string>
     <string name="hr_label">BPM</string>
-    <string name="offbody_detect_warning">Place watch on wrist</string>
+    <string name="off_body_alert">Place watch on wrist</string>
 </resources>
