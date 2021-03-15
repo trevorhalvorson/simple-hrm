@@ -31,9 +31,12 @@ class HrmFragment : Fragment(), SensorEventListener {
 
     companion object {
         val TAG = "HrmFragment"
-        val DATA_SET_LABEL = "HR_DATA"
-        val MAX_DATA_POINTS = 10
-        val INITIAL_HR = 60F
+
+        val CHART_DATA_SET_LABEL = "HR_DATA"
+        val CHART_MAX_DATA_POINTS = 10
+        val CHART_INITIAL_HR = 60F
+        val CHART_MIN_OFFSET_RATIO = 0.9F
+        val CHART_MAX_OFFSET_RATIO = 1.1F
 
         fun newInstance() = HrmFragment()
     }
@@ -119,7 +122,7 @@ class HrmFragment : Fragment(), SensorEventListener {
         hrChart.legend.isEnabled = false
         hrChart.xAxis.isEnabled = false
         hrChart.xAxis.axisMinimum = 0F
-        hrChart.xAxis.axisMaximum = MAX_DATA_POINTS.toFloat()
+        hrChart.xAxis.axisMaximum = CHART_MAX_DATA_POINTS.toFloat()
         hrChart.axisLeft.isEnabled = false
         hrChart.axisRight.isEnabled = false
         hrChart.setTouchEnabled(false)
@@ -130,10 +133,10 @@ class HrmFragment : Fragment(), SensorEventListener {
 
         // Initial Chart data
         val initialData = arrayListOf<Entry>()
-        for (i in 0 until MAX_DATA_POINTS) {
-            initialData.add(Entry(i * 1F, INITIAL_HR))
+        for (i in 0 until CHART_MAX_DATA_POINTS) {
+            initialData.add(Entry(i * 1F, CHART_INITIAL_HR))
         }
-        val dataSet = LineDataSet(initialData, DATA_SET_LABEL)
+        val dataSet = LineDataSet(initialData, CHART_DATA_SET_LABEL)
 
         dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         dataSet.cubicIntensity = 0.3f
@@ -149,15 +152,12 @@ class HrmFragment : Fragment(), SensorEventListener {
     }
 
     private fun updateChart(newValue: Float) {
-        val newData = arrayListOf<Entry>()
-        val dataSet = hrChart.data.getDataSetByLabel(DATA_SET_LABEL, true) as LineDataSet
-        val oldData = dataSet.values
-        oldData.removeFirstOrNull()
-        for (i in oldData.indices) {
-            newData.add(Entry(i * 1F, oldData[i].y))
+        val dataSet = hrChart.data.getDataSetByLabel(CHART_DATA_SET_LABEL, true) as LineDataSet
+        dataSet.values.removeFirstOrNull()
+        for (i in dataSet.values.indices) {
+            dataSet.values[i].x = i * 1F
         }
-        newData.add(Entry(newData.size * 1F, newValue))
-        dataSet.values = newData
+        dataSet.values.add(Entry(dataSet.values.size * 1F, newValue))
 
         var minValue = Float.MAX_VALUE
         var maxValue = Float.MIN_VALUE
@@ -173,8 +173,8 @@ class HrmFragment : Fragment(), SensorEventListener {
 
         hrChart.axisLeft.resetAxisMaximum()
         hrChart.axisLeft.resetAxisMinimum()
-        hrChart.axisLeft.axisMinimum = minValue * 0.9F
-        hrChart.axisLeft.axisMaximum = maxValue * 1.1F
+        hrChart.axisLeft.axisMinimum = minValue * CHART_MIN_OFFSET_RATIO
+        hrChart.axisLeft.axisMaximum = maxValue * CHART_MAX_OFFSET_RATIO
         hrChart.data.notifyDataChanged()
         hrChart.notifyDataSetChanged()
         hrChart.invalidate()
