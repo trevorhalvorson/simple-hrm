@@ -49,7 +49,7 @@ class HrmFragment : Fragment() {
         hrChart = view.findViewById(R.id.hr_chart)
 
         hrViewModel = ViewModelProvider(requireActivity()).get(HrViewModel::class.java)
-        hrViewModel.heartRate.observe(this, Observer<HeartRate> { heartRate ->
+        hrViewModel.heartRate.observe(this, Observer { heartRate ->
             val bpm = heartRate.bpm
             hrTv.text = bpm.roundToInt().toString()
             updateChart(bpm)

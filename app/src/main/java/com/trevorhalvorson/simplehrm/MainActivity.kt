@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.trevorhalvorson.simplehrm.ui.hrm.HrmFragment
-import com.trevorhalvorson.simplehrm.ui.hrm.OffBodyFragment
+import com.trevorhalvorson.simplehrm.ui.hrm.LoadingFragment
 import com.trevorhalvorson.simplehrm.viewmodel.HrViewModel
 import com.trevorhalvorson.simplehrm.viewmodel.OffBodyDetectViewModel
 import java.util.*
@@ -31,21 +31,42 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, OffBodyFragment.newInstance())
+                .replace(
+                    R.id.container,
+                    LoadingFragment.newInstance(resources.getString(R.string.reading_hr_alert))
+                )
                 .commitNow()
         }
 
         hrViewModel = ViewModelProvider(this).get(HrViewModel::class.java)
-        offBodyDetectViewModel = ViewModelProvider(this).get(OffBodyDetectViewModel::class.java)
+        hrViewModel.heartRate.observe(this, Observer { _ ->
+            val fragment = supportFragmentManager.findFragmentByTag(HrmFragment.TAG)
+            if (fragment == null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.container,
+                        HrmFragment.newInstance(),
+                        HrmFragment.TAG
+                    )
+                    .commitNow()
+            }
+        })
 
-        offBodyDetectViewModel.offBodyDetect.observe(this, Observer<Boolean> { offBody ->
+        offBodyDetectViewModel = ViewModelProvider(this).get(OffBodyDetectViewModel::class.java)
+        offBodyDetectViewModel.offBodyDetect.observe(this, Observer { offBody ->
             if (offBody) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, OffBodyFragment.newInstance())
+                    .replace(
+                        R.id.container,
+                        LoadingFragment.newInstance(resources.getString(R.string.off_body_alert))
+                    )
                     .commitNow()
             } else {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, HrmFragment.newInstance())
+                    .replace(
+                        R.id.container,
+                        LoadingFragment.newInstance(resources.getString(R.string.reading_hr_alert))
+                    )
                     .commitNow()
             }
         })

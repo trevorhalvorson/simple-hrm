@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Simple HRM</string>
     <string name="hr_label">BPM</string>
-    <string name="off_body_alert">Place watch on wrist</string>
+    <string name="off_body_alert">Place wearable on wrist</string>
+    <string name="reading_hr_alert">Reading heart rate…</string>
 </resources>
