@@ -4,9 +4,7 @@ A demo Android application for wearable devices that reads and displays heart ra
 
 Simple HRM determines if the wearable is being worn using the [TYPE_LOW_LATENCY_OFFBODY_DETECT](https://developer.android.com/reference/android/hardware/Sensor#TYPE_LOW_LATENCY_OFFBODY_DETECT) sensor and reads heart rate data (as beats per minute) using the [TYPE_HEART_RATE](https://developer.android.com/reference/android/hardware/Sensor#TYPE_HEART_RATE) sensor.
 
-![detect](./assets/screenshot-detect.png)
-![read](./assets/screenshot-reading-hr.png)
-![monitor](./assets/screenshot-hrm.png)
+![demo](./assets/screenrecord-demo.gif)
 
 ## Setup
 
