@@ -11,10 +11,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.trevorhalvorson.simplehrm.ui.hrm.HrmFragment
 import com.trevorhalvorson.simplehrm.ui.hrm.LoadingFragment
+import com.trevorhalvorson.simplehrm.ui.hrm.PermissionsFragment
 import com.trevorhalvorson.simplehrm.viewmodel.HrViewModel
 import com.trevorhalvorson.simplehrm.viewmodel.OffBodyDetectViewModel
 import java.util.*
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     supportFragmentManager.beginTransaction()
                         .replace(
                             R.id.container,
-                            LoadingFragment.newInstance(resources.getString(R.string.permissions_denied_alert))
+                            PermissionsFragment.newInstance()
                         )
                         .commitNow()
                 }
