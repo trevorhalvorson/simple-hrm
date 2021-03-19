@@ -6,14 +6,6 @@ Simple HRM determines if the wearable is being worn using the [TYPE_LOW_LATENCY_
 
 ![demo](./assets/screenrecord-demo.gif)
 
-## Setup
-
-After installing, grant permissions using ADB:
-
-```
-adb shell pm grant com.trevorhalvorson.simplehrm android.permission.BODY_SENSORS
-```
-
 ## UI
 
 -   Design: https://dribbble.com/shots/14454424-Activity-Watch-App-Shot
