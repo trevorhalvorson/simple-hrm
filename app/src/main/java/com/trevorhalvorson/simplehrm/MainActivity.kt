@@ -140,11 +140,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         )
         when (event?.sensor?.type) {
             Sensor.TYPE_HEART_RATE -> {
-                hrViewModel.submitHrEvent(event)
+                val value = event.values.firstOrNull()
+                value?.let {
+                    hrViewModel.submitHr(value)
+                }
             }
 
             Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT -> {
-                offBodyDetectViewModel.submitOffBodyDetectEvent(event)
+                val value = event.values.firstOrNull()
+                value?.let {
+                    offBodyDetectViewModel.submitOffBodyDetect(it.equals(0.0F))
+                }
             }
 
             else -> {
