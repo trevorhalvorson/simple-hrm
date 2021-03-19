@@ -16,6 +16,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${applicationId}-${variant.buildType.name}-v${defaultConfig.versionName}.apk"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
