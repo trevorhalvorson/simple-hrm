@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
         hrViewModel = ViewModelProvider(this).get(HrViewModel::class.java)
-        hrViewModel.heartRate.observe(this, Observer { _ ->
+        hrViewModel.heartRate.observe(this, {
             val fragment = supportFragmentManager.findFragmentByTag(HrmFragment.TAG)
             if (fragment == null) {
                 supportFragmentManager.beginTransaction()
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         })
 
         offBodyDetectViewModel = ViewModelProvider(this).get(OffBodyDetectViewModel::class.java)
-        offBodyDetectViewModel.offBodyDetect.observe(this, Observer { offBody ->
+        offBodyDetectViewModel.offBodyDetect.observe(this, { offBody ->
             if (offBody) {
                 supportFragmentManager.beginTransaction()
                     .replace(
