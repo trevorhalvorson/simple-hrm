@@ -134,10 +134,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        Log.d(
-            TAG,
-            "onSensorChanged: ${event?.sensor?.type} ${Arrays.toString(event?.values)}"
-        )
+        if (BuildConfig.DEBUG) {
+            Log.d(
+                TAG,
+                "onSensorChanged: ${event?.sensor?.type} ${Arrays.toString(event?.values)}"
+            )
+        }
+
         when (event?.sensor?.type) {
             Sensor.TYPE_HEART_RATE -> {
                 val value = event.values.firstOrNull()
@@ -154,12 +157,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
 
             else -> {
-                Log.d(TAG, "Unhandled sensor event")
+                Log.i(TAG, "Unhandled sensor event")
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        Log.d(TAG, "onAccuracyChanged: ${sensor?.type} $accuracy")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onAccuracyChanged: ${sensor?.type} $accuracy")
+        }
     }
 }
