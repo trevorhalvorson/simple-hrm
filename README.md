@@ -2,9 +2,11 @@
 
 A demo Android application for wearable devices that reads and displays heart rate data.
 
+The latest APK version can be downloaded from the [Releases page](https://github.com/trevorhalvorson/simple-hrm/releases/latest).
+
 ![demo](./assets/screenrecord-demo.gif)
 
-## How it Works
+## How It Works
 
 Simple HRM determines if the wearable is being worn using the [TYPE_LOW_LATENCY_OFFBODY_DETECT](https://developer.android.com/reference/android/hardware/Sensor#TYPE_LOW_LATENCY_OFFBODY_DETECT) sensor and then reads heart rate data (as beats per minute) using the [TYPE_HEART_RATE](https://developer.android.com/reference/android/hardware/Sensor#TYPE_HEART_RATE) sensor.
 
