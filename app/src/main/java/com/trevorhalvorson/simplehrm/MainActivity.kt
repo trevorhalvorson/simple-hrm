@@ -134,37 +134,44 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (BuildConfig.DEBUG) {
-            Log.d(
-                TAG,
-                "onSensorChanged: ${event?.sensor?.type} ${Arrays.toString(event?.values)}"
-            )
-        }
-
-        when (event?.sensor?.type) {
-            Sensor.TYPE_HEART_RATE -> {
-                val value = event.values.firstOrNull()
-                value?.let {
-                    hrViewModel.submitHr(value)
-                }
+        event?.let {
+            if (BuildConfig.DEBUG) {
+                Log.d(
+                    TAG,
+                    "onSensorChanged: " +
+                            "type=${event.sensor?.type}, " +
+                            "accuracy=${event.accuracy}, " +
+                            "values=${Arrays.toString(event.values)}"
+                )
             }
 
-            Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT -> {
-                val value = event.values.firstOrNull()
-                value?.let {
-                    offBodyDetectViewModel.submitOffBodyDetect(it.equals(0.0F))
-                }
-            }
+            if (event.accuracy >= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
+                when (event.sensor?.type) {
+                    Sensor.TYPE_HEART_RATE -> {
+                        val value = event.values.firstOrNull()
+                        value?.let {
+                            hrViewModel.submitHr(value)
+                        }
+                    }
 
-            else -> {
-                Log.i(TAG, "Unhandled sensor event")
+                    Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT -> {
+                        val value = event.values.firstOrNull()
+                        value?.let {
+                            offBodyDetectViewModel.submitOffBodyDetect(it.equals(0.0F))
+                        }
+                    }
+                }
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onAccuracyChanged: ${sensor?.type} $accuracy")
+            Log.d(
+                TAG, "onAccuracyChanged: " +
+                        "type=${sensor?.type}, " +
+                        "accuracy=$accuracy"
+            )
         }
     }
 }
